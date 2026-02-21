@@ -1,0 +1,108 @@
+{
+  "version": "1.0.0",
+  "canvas": {
+    "width": 400,
+    "height": 720
+  },
+  "ui": {
+    "preGameSeconds": 10
+  },
+  "boundary": {
+    "shape": "circle",
+    "radius": 190,
+    "color": "#ffffff",
+    "lineWidth": 2,
+    "restitution": 1.05,
+    "tangentImpulse": 0.02,
+    "minSpeed": 1,
+    "maxSpeed": 3.0,
+    "twoOrbsMaxSpeed": 25.0,
+    "twoOrbsRampFrames": 300,
+    "rectHalfWidth": 200,
+    "rectHalfHeight": 300
+  },
+  "orbs": {
+    "count": 5,
+    "radius": 12,
+    "speed": 0.1,
+    "amplitude": 500,
+    "colors": [
+      "#ff6b35",
+      "#8b5cf6",
+      "#10b981",
+      "#f59e0b",
+      "#ef4444",
+      "#06b6d4"
+    ]
+  },
+  "burst": {
+    "lineCount": 15,
+    "minLength": 50,
+    "maxLength": 200,
+    "lineWidth": 0.8,
+    "clashDistance": 25
+  },
+  "performance": {
+    "maxLines": 5000,
+    "animationDuration": 75000
+  },
+  "tethers": {
+    "hitDamping": 0.002,
+    "springRest": 0,
+    "springK": 0.0,
+    "springDamping": 0.0
+  },
+  "gravity": {
+    "base": 0.00001,
+    "ampFrac": 0.4,
+    "periodFrames": 240,
+    "oscillateBelowOrbs": 3
+  },
+  "edgeGuide": {
+    "enabled": false,
+    "radiusTargetFrac": 0.92,
+    "bandWidth": 28,
+    "k": 0.2,
+    "minSpeedGate": 0.8
+  },
+  "edgeGravity": {
+    "strength": 0.00002,
+    "count": 0,
+    "insetPixels": 64
+  },
+  "collisions": {
+    "orbRestitution": 1.5
+  },
+  "split": {
+    "enabled": false,
+    "vnThreshold": 6.0,
+    "keThreshold": 20.0,
+    "radiusScale": 1,
+    "childSpeedMul": 0.5,
+    "angleSpread": 0.45,
+    "maxGenerations": 2,
+    "cooldownFrames": 180,
+    "maxOrbsCap": 24
+  },
+  "suddenDeath": {
+    "enabled": true,
+    "afterFrames": 900,
+    "durationFrames": 240,
+    "gravityMultiplier": 12,
+    "centerShiftRadius": 40,
+    "centerShiftPeriodFrames": 120
+  },
+  "fx": {
+    "shockwave": {
+      "enabled": true,
+      "lifeFrames": 90,
+      "maxRadius": 600,
+      "ringThickness": 0.1,
+      "respectProtect": false
+    }
+  },
+  "debug": {
+    "showEdgePoints": false
+  },
+  "disableTraits": true
+}

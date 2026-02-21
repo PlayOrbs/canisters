@@ -1,0 +1,134 @@
+{
+  "version": "1.2.2",
+  "canvas": {
+    "width": 400,
+    "height": 720
+  },
+  "ui": {
+    "preGameSeconds": 10
+  },
+  "boundary": {
+    "shape": "circle",
+    "radius": 190,
+    "color": "#ffffff",
+    "lineWidth": 2,
+    "restitution": 1.02,
+    "tangentImpulse": 0.01,
+    "minSpeed": 0.5,
+    "maxSpeed": 5.0,
+    "twoOrbsMaxSpeed": 8.0,
+    "twoOrbsRampFrames": 200000000,
+    "rectHalfWidth": 200,
+    "rectHalfHeight": 300
+  },
+  "orbs": {
+    "count": 5,
+    "radius": 12,
+    "speed": 2,
+    "amplitude": 500,
+    "baseSpeed": 2,
+    "colors": [
+      "#ff6b35",
+      "#8b5cf6",
+      "#10b981",
+      "#f59e0b",
+      "#ef4444",
+      "#06b6d4"
+    ],
+    "spawn": {
+      "mode": "rings",
+      "pad": 58,
+      "startInset": 104,
+      "ringGap": 30,
+      "ringsMin": 1,
+      "ringsMax": 5,
+      "velocity": "none",
+      "jitter": false
+    }
+  },
+  "burst": {
+    "lineCount": 15,
+    "minLength": 50,
+    "maxLength": 200,
+    "lineWidth": 0.8,
+    "clashDistance": 25
+  },
+  "performance": {
+    "maxLines": 5000,
+    "animationDuration": 75000
+  },
+  "tethers": {
+    "hitDamping": 0.125,
+    "springRest": 0,
+    "springK": 0.0,
+    "springDamping": 0.0,
+    "breakSpeedMin": 3,
+    "immunityFrames": 200
+  },
+  "gravity": {
+    "base": 0.0000000001,
+    "ampFrac": 0.4,
+    "periodFrames": 40,
+    "oscillateBelowOrbs": 3
+  },
+  "edgeGuide": {
+    "enabled": false,
+    "radiusTargetFrac": 0.6,
+    "bandWidth": 32,
+    "k": 0.15,
+    "minSpeedGate": 0.4
+  },
+  "edgeGravity": {
+    "strength": 0.00001,
+    "count": 0,
+    "insetPixels": 60
+  },
+  "collisions": {
+    "orbRestitution": 1.004
+  },
+  "split": {
+    "enabled": true,
+    "enableBelowOrbs": 2,
+    "vnThreshold": 5,
+    "keThreshold": 20.0,
+    "radiusScale": 1,
+    "childSpeedMul": 0.5,
+    "angleSpread": 0.45,
+    "maxGenerations": 2,
+    "cooldownFrames": 180,
+    "maxOrbsCap": 24
+  },
+  "suddenDeath": {
+    "enabled": true,
+    "afterFrames": 600,
+    "gravityMultiplier": 2,
+    "centerShiftRadius": 0.1,
+    "centerShiftPeriodFrames": 150,
+    "orbAttraction": 0,
+    "tangentImpulseMul": 5.0,
+    "restitutionMul": 1.5
+  },
+  "fx": {
+    "shockwave": {
+      "enabled": true,
+      "lifeFrames": 40,
+      "maxRadius": 100,
+      "ringThickness": 5,
+      "respectProtect": true,
+      "cutMode": "segment",
+      "triggerOnSplit": true,
+      "triggerOnImpact": true,
+      "impactThreshold": 4,
+      "impactCutsTethers": true
+    }
+  },
+  "debug": {
+    "showEdgePoints": false
+  },
+  "rendering": {
+    "dimUntilBreakSpeed": false,
+    "orbDimAlpha": 0.4,
+    "tetherDimAlpha": 0.1
+  },
+  "disableTraits": true
+}

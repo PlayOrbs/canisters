@@ -1,0 +1,23 @@
+[package]
+name = "orbs_backend"
+version = "0.1.0"
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+candid = "0.10.20"
+ic-cdk = "0.18.0"
+ic-cdk-timers = "0.12" # Feel free to remove this dependency if you don't need timers
+ic-stable-structures = "0.7.2"
+serde = "1"
+k256 = { version = "0.13", default-features = false, features = ["ecdsa", "std"] }
+hex = "0.4.3"
+bs58 = "0.5"
+thiserror = "2.0.17"
+sha2 = "0.10.9"
+getrandom = { version = "0.2", features = ["custom"] }
+ciborium = "0.2.2"

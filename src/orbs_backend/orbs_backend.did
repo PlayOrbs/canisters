@@ -1,0 +1,185 @@
+type EngineConfig = record {
+  created_at : nat64;
+  version : text;
+  config_json : text;
+};
+type PlayerConfigInput = record {
+  alloc_tether : nat8;
+  tier_id : nat8;
+  player_config_hash : blob;
+  spawn_rot_q : nat16;
+  alloc_split : nat8;
+  player_pubkey : blob;
+  alloc_power : nat8;
+  spawn_x_q : int16;
+  spawn_y_q : int16;
+  tp_preset : nat16;
+  round_id : nat64;
+};
+type PlayerConfigOutput = record {
+  alloc_tether : nat8;
+  tier_id : nat8;
+  player_config_hash : blob;
+  spawn_rot_q : nat16;
+  alloc_split : nat8;
+  created_at : nat64;
+  player_pubkey : blob;
+  alloc_power : nat8;
+  spawn_x_q : int16;
+  spawn_y_q : int16;
+  tp_preset : nat16;
+  round_id : nat64;
+};
+type PlayerJoinData = record {
+  spawn_rot_rad : float32;
+  spawn_y_norm : float32;
+  alloc_orb_power : nat8;
+  alloc_tether_res : nat8;
+  alloc_split_aggro : nat8;
+  stored_at : nat64;
+  spawn_x_norm : float32;
+  earned_sp : nat8;
+};
+type PlayerJoinDataInput = record {
+  spawn_rot_rad : float32;
+  spawn_y_norm : float32;
+  player : blob;
+  tier_id : nat8;
+  alloc_orb_power : nat8;
+  alloc_tether_res : nat8;
+  alloc_split_aggro : nat8;
+  spawn_x_norm : float32;
+  earned_sp : nat8;
+  round_id : nat64;
+};
+type PlayerJoinDataOutput = record {
+  spawn_rot_rad : float32;
+  spawn_y_norm : float32;
+  player : blob;
+  alloc_orb_power : nat8;
+  alloc_tether_res : nat8;
+  alloc_split_aggro : nat8;
+  stored_at : nat64;
+  spawn_x_norm : float32;
+  earned_sp : nat8;
+};
+type PlayerPage = record { total : nat64; players : vec blob };
+type PlayerRoundHistoryEntry = record {
+  orb_earned_atoms : nat64;
+  placement : nat8;
+  season_id : nat16;
+  tier_id : nat8;
+  join_ts : nat64;
+  sol_earned_lamports : nat64;
+  round_id : nat64;
+  kills : nat8;
+};
+type PlayerRoundHistoryPage = record {
+  total : nat64;
+  rounds : vec PlayerRoundHistoryEntry;
+};
+type Result = variant { Ok; Err : text };
+type Result_1 = variant { Ok : text; Err : text };
+type Result_2 = variant { Ok : opt PlayerConfigOutput; Err : text };
+type Result_3 = variant { Ok : opt PlayerJoinData; Err : text };
+type Result_4 = variant { Ok : PlayerRoundHistoryPage; Err : text };
+type Result_5 = variant { Ok : blob; Err : text };
+type Result_6 = variant { Ok : vec PlayerConfigOutput; Err : text };
+type Result_7 = variant { Ok : SeedProof; Err : text };
+type RoundPlayerSnapshot = record {
+  orb_earned_atoms : nat64;
+  placement : nat8;
+  player : blob;
+  player_config_hash : opt blob;
+  join_ts : nat64;
+  tp_preset : nat8;
+  kills : nat8;
+  payout_lamports : nat64;
+};
+type RoundPlayerSnapshotInput = record {
+  orb_earned_atoms : nat64;
+  placement : nat8;
+  player : text;
+  player_config_hash : opt text;
+  join_ts : nat64;
+  tp_preset : nat8;
+  kills : nat8;
+  payout_lamports : nat64;
+};
+type RoundSnapshot = record {
+  season_id : nat16;
+  tier_id : nat8;
+  emit_tx_sig : opt text;
+  did_emit : bool;
+  players : vec RoundPlayerSnapshot;
+  config_version : text;
+  round_id : nat64;
+};
+type RoundSnapshotPage = record {
+  total : nat64;
+  snapshots : vec RoundSnapshot;
+};
+type SeedProof = record {
+  proof_positions : vec bool;
+  root_signature : blob;
+  seed : blob;
+  chunk_id : nat64;
+  merkle_root : blob;
+  proof_siblings : vec blob;
+};
+service : (vec principal) -> {
+  add_engine_config : (text, text) -> (Result);
+  add_players : (vec blob) -> (Result);
+  chunk_exists : (nat8) -> (bool) query;
+  clear_all_data : () -> (Result);
+  clear_revealed_seed : (nat8, nat64) -> (Result);
+  get_chunk_offset : (nat8) -> (nat64) query;
+  get_chunk_size : () -> (nat64) query;
+  get_current_config_version : () -> (text) query;
+  get_engine_config : (text) -> (opt EngineConfig) query;
+  get_last_settled_round : (nat8) -> (nat64) query;
+  get_latest_engine_config : () -> (opt EngineConfig) query;
+  get_latest_engine_config_version : () -> (opt text) query;
+  get_orbs_ic_pubkey : () -> (Result_1) query;
+  get_player_config : (nat64, nat8, blob) -> (Result_2) query;
+  get_player_join_data : (blob, nat8, nat64) -> (Result_3) query;
+  get_player_round_history : (blob, nat64, nat64) -> (Result_4) query;
+  get_player_round_seed : (nat8, nat64, blob) -> (Result_5) query;
+  get_players : (nat64, nat64) -> (PlayerPage) query;
+  get_revealed_seed : (nat8, nat64) -> (opt SeedProof) query;
+  get_round_join_data : (nat8, nat64) -> (vec PlayerJoinDataOutput) query;
+  get_round_snapshot : (nat8, nat64) -> (opt RoundSnapshot) query;
+  get_round_snapshots_by_tier : (nat8, nat64, nat64) -> (
+      RoundSnapshotPage,
+    ) query;
+  init_orbs_ic_pubkey : () -> (Result);
+  list_admins : () -> (vec principal) query;
+  list_engine_config_versions : () -> (vec EngineConfig) query;
+  // List player configs for a round (admin only).
+  // ADMIN ONLY - spawn positions are hidden until seed reveal to prevent gaming.
+  // Engine-runner uses this during settlement.
+  list_player_configs : (nat64, nat8) -> (Result_6) query;
+  // List player configs for a revealed round (public).
+  // Only returns configs if the round's seed has been revealed.
+  // Frontend uses this to load spawn positions for replay.
+  list_player_configs_if_revealed : (nat64, nat8) -> (Result_6) query;
+  player_exists : (blob) -> (bool) query;
+  refresh_chunks_for_tier : (nat8, nat64) -> (Result);
+  reveal_seed_for_round : (nat8, nat64) -> (Result_7);
+  set_admin : (principal) -> ();
+  set_chunk_offset : (nat8, nat64) -> (Result);
+  set_current_config_version : (text) -> (Result);
+  set_last_settled_round : (nat8, nat64) -> (Result);
+  set_player_config : (PlayerConfigInput) -> (Result);
+  store_player_join_data : (PlayerJoinDataInput) -> (Result);
+  store_round_snapshot : (
+      nat8,
+      nat64,
+      nat16,
+      vec RoundPlayerSnapshotInput,
+      bool,
+      opt text,
+    ) -> (Result);
+  update_engine_config : (text, text) -> (Result);
+  update_round_config_version : (nat8, nat64, text) -> (Result);
+}

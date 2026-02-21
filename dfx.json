@@ -1,0 +1,37 @@
+{
+  "canisters": {
+    "orbs_backend": {
+      "candid": "src/orbs_backend/orbs_backend.did",
+      "package": "orbs_backend",
+      "type": "custom",
+      "wasm": "target/wasm32-unknown-unknown/release/orbs_backend.wasm",
+      "build": "echo \"Bulding...\";",
+      "metadata": [
+        {
+          "name": "candid:service"
+        }
+      ]
+    },
+    "orbs_backend_prod": {
+      "candid": "src/orbs_backend/orbs_backend.did",
+      "package": "orbs_backend",
+      "type": "custom",
+      "wasm": "target/wasm32-unknown-unknown/release/orbs_backend.wasm",
+      "build": "echo \"Bulding...\";",
+      "metadata": [
+        {
+          "name": "candid:service"
+        }
+      ]
+    }
+  },
+
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
