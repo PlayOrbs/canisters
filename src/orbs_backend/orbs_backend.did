@@ -159,6 +159,10 @@ service : (vec principal) -> {
   // ADMIN ONLY - spawn positions are hidden until seed reveal to prevent gaming.
   // Engine-runner uses this during settlement.
   list_player_configs : (nat64, nat8) -> (Result_6) query;
+  // List player configs for a round with consistent read (admin only).
+  // Uses #[update] to go through consensus — guarantees no replica staleness.
+  // Engine-runner uses this as fallback when #[query] retries fail to return all configs.
+  list_player_configs_consistent : (nat64, nat8) -> (Result_6);
   // List player configs for a revealed round (public).
   // Only returns configs if the round's seed has been revealed.
   // Frontend uses this to load spawn positions for replay.

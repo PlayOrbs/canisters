@@ -408,6 +408,20 @@ fn list_player_configs(round_id: u64, tier_id: u8) -> Result<Vec<PlayerConfigOut
     }
 }
 
+/// List player configs for a round with consistent read (admin only).
+/// Uses #[update] to go through consensus — guarantees no replica staleness.
+/// Engine-runner uses this as fallback when #[query] retries fail to return all configs.
+#[update]
+fn list_player_configs_consistent(round_id: u64, tier_id: u8) -> Result<Vec<PlayerConfigOutput>, String> {
+    ensure_admin();
+    let all = game::list_player_configs(round_id, tier_id);
+    if all.len() > MAX_PLAYER_CONFIGS_LIST {
+        Ok(all.into_iter().take(MAX_PLAYER_CONFIGS_LIST).collect())
+    } else {
+        Ok(all)
+    }
+}
+
 /// List player configs for a revealed round (public).
 /// Only returns configs if the round's seed has been revealed.
 /// Frontend uses this to load spawn positions for replay.
