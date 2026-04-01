@@ -35,6 +35,12 @@ pub struct RoundSnapshot {
     pub emit_tx_sig: Option<String>, // Solana tx signature for ORB mint (base58)
     #[serde(default = "default_config_version")]
     pub config_version: String, // Engine config version used for this round (e.g. "1.2.2")
+    #[serde(default = "default_payout_model")]
+    pub payout_model: String, // Payout model used: "v1_inherit" or "v2_top3"
+}
+
+fn default_payout_model() -> String {
+    "v1_inherit".to_string()
 }
 
 fn default_config_version() -> String {

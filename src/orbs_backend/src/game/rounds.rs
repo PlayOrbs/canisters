@@ -73,6 +73,7 @@ pub fn store_round_snapshot(
                 did_emit,
                 emit_tx_sig,
                 config_version,
+                payout_model: "v2_top3".to_string(),
             };
             map.insert(key, Cbor(snapshot));
         }

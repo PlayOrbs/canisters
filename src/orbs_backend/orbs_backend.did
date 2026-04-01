@@ -114,6 +114,7 @@ type RoundSnapshot = record {
   players : vec RoundPlayerSnapshot;
   config_version : text;
   round_id : nat64;
+  payout_model : text;
 };
 type RoundSnapshotPage = record {
   total : nat64;
