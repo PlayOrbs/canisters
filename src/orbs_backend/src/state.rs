@@ -177,6 +177,7 @@ pub enum MemoryIndex {
     CurrentConfigVersion = 11, // Current active config version string
     PlayerJoinData = 12,   // Player join data (spawn, allocation) per player per round (DEPRECATED)
     PlayerConfigs = 13,    // Player config records for v2 rounds (quantized, immutable)
+    SeedChunksNext = 14,   // Prefetched next seed chunk per tier (paired with SeedChunks)
 }
 
 type VM = VirtualMemory<DefaultMemoryImpl>;
@@ -245,9 +246,23 @@ thread_local! {
         })
     });
 
-    // Tracks the next seed index to use within the current chunk for each (season_id, tier_id)
-    // Key: (season_id << 8) | tier_id, Value: next_offset within current chunk (0-49)
-    // When offset reaches CHUNK_SIZE (50), chunk is regenerated and offset resets to 0
+    // Prefetched next seed chunk per tier - holds chunk_id = current.chunk_id + 1
+    // Populated inside reveal_seed so the next chunk is ready before the boundary
+    // is crossed. Read paths (get_raw_seed_for_round) consult both SEED_CHUNKS and
+    // this map so player-seed derivation works seamlessly across chunk boundaries.
+    // Key: same as SEED_CHUNKS (tier_id encoded as u32 via seed_chunk_key).
+    pub static SEED_CHUNKS_NEXT: RefCell<StableBTreeMap<u32, Cbor<crate::seeds::SeedChunk>, VM>> = RefCell::new({
+        MEM_MGR.with(|m| {
+            let mem = m.borrow().get(MemoryId::new(MemoryIndex::SeedChunksNext as u8));
+            StableBTreeMap::init(mem)
+        })
+    });
+
+    // Tracks the cumulative count of seeds revealed for each tier.
+    // Key: tier_id (encoded as u32), Value: monotonic offset = total seeds revealed.
+    // Offset is monotonic across reveals (never wraps); chunk-boundary handling
+    // fires inside reveal_seed when `new_offset % CHUNK_SIZE == 0`, at which
+    // point NEXT (SEED_CHUNKS_NEXT) is promoted into CURRENT (SEED_CHUNKS).
     pub static CHUNK_OFFSETS: RefCell<StableBTreeMap<u32, u64, VM>> = RefCell::new({
         MEM_MGR.with(|m| {
             let mem = m.borrow().get(MemoryId::new(MemoryIndex::ChunkOffsets as u8));

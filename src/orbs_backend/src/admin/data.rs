@@ -1,6 +1,6 @@
 //! Data management utilities (clear, reset, etc.)
 
-use crate::state::{PLAYERS, PLAYER_ROUND_REFS, ROUND_HISTORY_ENTRIES, ROUND_SNAPSHOTS, SEED_CHUNKS, CHUNK_OFFSETS, REVEALED_SEEDS, LAST_SETTLED_ROUNDS};
+use crate::state::{PLAYERS, PLAYER_ROUND_REFS, ROUND_HISTORY_ENTRIES, ROUND_SNAPSHOTS, SEED_CHUNKS, SEED_CHUNKS_NEXT, CHUNK_OFFSETS, REVEALED_SEEDS, LAST_SETTLED_ROUNDS};
 
 /// Clear all data from the canister (admin only).
 /// Use this when switching to a new Solana program.
@@ -31,6 +31,10 @@ pub fn clear_all_data() -> Result<(), String> {
 
     // Clear seed-related data
     SEED_CHUNKS.with_borrow_mut(|m| {
+        m.clear_new();
+    });
+
+    SEED_CHUNKS_NEXT.with_borrow_mut(|m| {
         m.clear_new();
     });
 
